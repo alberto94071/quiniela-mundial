@@ -1,0 +1,126 @@
+.auth-page {
+  min-height: calc(100vh - 64px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  position: relative;
+}
+
+.auth-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.auth-orb {
+  position: absolute;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(0,200,83,0.12) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  filter: blur(60px);
+  border-radius: 50%;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.auth-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.auth-logo { font-size: 2.5rem; margin-bottom: 4px; }
+
+.auth-header h1 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  letter-spacing: 2px;
+}
+
+.auth-header p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.w-full { width: 100%; }
+
+.auth-footer {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+.auth-footer a { color: var(--green); font-weight: 600; }
+.auth-footer a:hover { text-decoration: underline; }
+
+/* Success state */
+.success-card { text-align: center; gap: 16px; }
+.success-icon { font-size: 3rem; }
+.success-card h2 { font-family: var(--font-display); font-size: 2rem; letter-spacing: 2px; }
+.success-sub { color: var(--text-muted); line-height: 1.6; font-size: 0.95rem; }
+.success-sub strong { color: var(--green); }
+
+.payment-steps {
+  background: rgba(0,200,83,0.05);
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+}
+
+.pay-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.pay-step strong { color: var(--text); }
+
+.pay-num {
+  width: 24px; height: 24px;
+  background: var(--green);
+  color: #000;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.referral-box {
+  background: rgba(255,215,0,0.06);
+  border: 1px solid rgba(255,215,0,0.2);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.ref-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.ref-code {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  letter-spacing: 6px;
+  color: var(--gold);
+}
+.ref-hint { font-size: 0.8rem; color: var(--text-muted); }
