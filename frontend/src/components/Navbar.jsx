@@ -44,6 +44,7 @@ export default function Navbar() {
               <Link to="/mis-pronosticos" className={`nav-link ${isActive('/mis-pronosticos') ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>
                 Mis Pronósticos
               </Link>
+              <Link to="/referidos" className={`nav-link ${isActive('/referidos') ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Referidos</Link>
               {user.is_admin && (
                 <Link to="/admin" className={`nav-link nav-admin ${isActive('/admin') ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>
                   Admin
