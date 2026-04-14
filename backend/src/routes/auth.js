@@ -8,7 +8,7 @@ import { sql } from '../lib/db.js';
 const router = express.Router();
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 5,
+  max: 20,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Demasiados intentos, espera 15 minutos antes de reintentar.' },
