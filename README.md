@@ -99,7 +99,7 @@ npm run db:migrate
 Esto:
 - crea tablas (`users`, `matches`, `predictions`, `leaderboard_cache`)
 - inserta admin base
-- inserta partidos de fase de grupos
+- inserta 72 partidos de fase de grupos (12 grupos x 6 partidos)
 
 ## Reset de base de datos (solo desarrollo)
 
@@ -134,3 +134,8 @@ El script pide confirmacion: `¿Estás seguro? Escribe RESET para confirmar:`
 - Revisar `VITE_API_URL` en Cloudflare Pages (Production + Preview).
 - Re-deploy del frontend tras cambios de variables.
 - Verificar `/health` del backend en navegador.
+
+## Nota de calendario
+
+- El seed de partidos en `backend/src/lib/migrate.js` está alineado con el fixture oficial publicado por FIFA para el Mundial 2026.
+- Referencia oficial: https://www.fifa.com/es/tournaments/mens/worldcup/canadamexicousa2026/articles/calendario-fixture-mundial-2026-partidos-fechas
