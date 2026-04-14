@@ -22,20 +22,22 @@
     <script type="module" src="/src/main.jsx"></script>
 
     <!-- Twemoji: arregla emojis de banderas en Windows/Chrome -->
+    <!-- Twemoji: solo para banderas en Windows/Chrome -->
     <script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous"></script>
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        function applyTwemoji() {
-          twemoji.parse(document.body, {
+      function applyTwemoji() {
+        var flags = document.querySelectorAll('.team-flag, .host-flag');
+        flags.forEach(function(el) {
+          twemoji.parse(el, {
             folder: 'svg',
             ext: '.svg',
             base: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/'
           });
-        }
-        applyTwemoji();
-        var observer = new MutationObserver(function () {
-          applyTwemoji();
         });
+      }
+      document.addEventListener('DOMContentLoaded', function () {
+        applyTwemoji();
+        var observer = new MutationObserver(applyTwemoji);
         observer.observe(document.getElementById('root'), {
           childList: true,
           subtree: true
