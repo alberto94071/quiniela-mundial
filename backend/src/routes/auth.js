@@ -2,12 +2,20 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { nanoid } from 'nanoid';
+import rateLimit from 'express-rate-limit';
 import { sql } from '../lib/db.js';
 
 const router = express.Router();
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Demasiados intentos, espera 15 minutos antes de reintentar.' },
+});
 
 // POST /api/auth/register
-router.post('/register', async (req, res) => {
+router.post('/register', authLimiter, async (req, res, next) => {
   try {
     const { name, email, password, referral_code } = req.body;
 
@@ -55,13 +63,12 @@ router.post('/register', async (req, res) => {
       },
     });
   } catch (err) {
-    console.error('Register error:', err);
-    res.status(500).json({ error: 'Error al registrar usuario' });
+    next(err);
   }
 });
 
 // POST /api/auth/login
-router.post('/login', async (req, res) => {
+router.post('/login', authLimiter, async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
@@ -84,7 +91,7 @@ router.post('/login', async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: user.id, email: user.email, is_admin: user.is_admin, is_active: user.is_active },
+      { id: user.id, is_admin: user.is_admin, is_active: user.is_active },
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
@@ -101,8 +108,7 @@ router.post('/login', async (req, res) => {
       },
     });
   } catch (err) {
-    console.error('Login error:', err);
-    res.status(500).json({ error: 'Error al iniciar sesión' });
+    next(err);
   }
 });
 

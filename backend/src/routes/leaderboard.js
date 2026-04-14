@@ -4,7 +4,7 @@ import { sql } from '../lib/db.js';
 const router = express.Router();
 
 // GET /api/leaderboard - public leaderboard
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
     const leaderboard = await sql`
       SELECT
@@ -36,8 +36,7 @@ router.get('/', async (req, res) => {
 
     res.json({ leaderboard, prizes });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error al obtener tabla de posiciones' });
+    next(err);
   }
 });
 

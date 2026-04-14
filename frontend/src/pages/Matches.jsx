@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { api } from '../lib/api';
 import { useAuth } from '../lib/AuthContext';
+import { useToast } from '../lib/ToastContext';
 import './Matches.css';
 
 function formatDate(dateStr) {
@@ -18,6 +19,7 @@ function isClosed(matchDate) {
 
 export default function Matches() {
   const { user } = useAuth();
+  const { showToast } = useToast();
   const [matches, setMatches] = useState([]);
   const [predictions, setPredictions] = useState({});
   const [drafts, setDrafts] = useState({});
@@ -68,9 +70,11 @@ export default function Matches() {
         home_score: draft.home,
         away_score: draft.away,
       });
+      showToast('Pronostico guardado correctamente', 'success');
       setMessages((m) => ({ ...m, [matchId]: { type: 'success', text: '✓ Pronóstico guardado' } }));
       setPredictions((p) => ({ ...p, [matchId]: { home_score: draft.home, away_score: draft.away } }));
     } catch (err) {
+      showToast(err.message, 'error');
       setMessages((m) => ({ ...m, [matchId]: { type: 'error', text: err.message } }));
     } finally {
       setSaving((s) => ({ ...s, [matchId]: false }));
@@ -82,7 +86,20 @@ export default function Matches() {
   const filtered = filter === 'all' ? matches : matches.filter((m) => m.phase === filter);
 
   if (loading) {
-    return <div className="page-loading"><div className="loading-spinner"></div><span>Cargando partidos...</span></div>;
+    return (
+      <div className="matches-page container">
+        <div className="matches-list">
+          {[1, 2, 3].map((key) => (
+            <div key={key} className="match-card card skeleton-card">
+              <div className="skeleton-line short"></div>
+              <div className="skeleton-line"></div>
+              <div className="skeleton-line"></div>
+              <div className="skeleton-line medium"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   }
 
   return (

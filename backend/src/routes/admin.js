@@ -8,7 +8,7 @@ const router = express.Router();
 router.use(authMiddleware, adminMiddleware);
 
 // GET /api/admin/users - list all users
-router.get('/users', async (req, res) => {
+router.get('/users', async (req, res, next) => {
   try {
     const users = await sql`
       SELECT
@@ -22,13 +22,12 @@ router.get('/users', async (req, res) => {
     `;
     res.json({ users });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error al obtener usuarios' });
+    next(err);
   }
 });
 
 // PATCH /api/admin/users/:id/activate - activate user account
-router.patch('/users/:id/activate', async (req, res) => {
+router.patch('/users/:id/activate', async (req, res, next) => {
   try {
     const { is_active, payment_status } = req.body;
     const [user] = await sql`
@@ -40,13 +39,12 @@ router.patch('/users/:id/activate', async (req, res) => {
     if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
     res.json({ user, message: `Cuenta ${is_active ? 'activada' : 'desactivada'} exitosamente` });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error al actualizar usuario' });
+    next(err);
   }
 });
 
 // GET /api/admin/stats - dashboard stats
-router.get('/stats', async (req, res) => {
+router.get('/stats', async (req, res, next) => {
   try {
     const [totals] = await sql`
       SELECT
@@ -80,8 +78,7 @@ router.get('/stats', async (req, res) => {
       },
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error al obtener estadísticas' });
+    next(err);
   }
 });
 

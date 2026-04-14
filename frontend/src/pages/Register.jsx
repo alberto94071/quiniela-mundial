@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../lib/AuthContext';
+import { useToast } from '../lib/ToastContext';
 import './Auth.css';
 
 const ADMIN_WA = import.meta.env.VITE_ADMIN_WHATSAPP || '+50212345678';
 
 export default function Register() {
   const { register } = useAuth();
+  const { showToast } = useToast();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const refCode = searchParams.get('ref') || '';
@@ -25,13 +27,16 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
     setError('');
     setLoading(true);
     try {
       const data = await register(form.name, form.email, form.password, form.referral_code);
       setSuccess(data);
+      showToast('Cuenta creada. Envia tu comprobante para activarla.', 'success');
     } catch (err) {
       setError(err.message);
+      showToast(err.message, 'error');
     } finally {
       setLoading(false);
     }

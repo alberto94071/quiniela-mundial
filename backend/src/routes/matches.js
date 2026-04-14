@@ -5,7 +5,7 @@ import { authMiddleware, adminMiddleware } from '../middleware/auth.js';
 const router = express.Router();
 
 // GET /api/matches - all matches (public)
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
     const matches = await sql`
       SELECT id, match_number, phase, home_team, away_team, home_flag, away_flag,
@@ -15,13 +15,12 @@ router.get('/', async (req, res) => {
     `;
     res.json({ matches });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error al obtener partidos' });
+    next(err);
   }
 });
 
 // GET /api/matches/:id - single match
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
   try {
     const [match] = await sql`
       SELECT * FROM matches WHERE id = ${req.params.id}
@@ -29,12 +28,12 @@ router.get('/:id', async (req, res) => {
     if (!match) return res.status(404).json({ error: 'Partido no encontrado' });
     res.json({ match });
   } catch (err) {
-    res.status(500).json({ error: 'Error al obtener partido' });
+    next(err);
   }
 });
 
 // POST /api/matches - admin creates a match
-router.post('/', authMiddleware, adminMiddleware, async (req, res) => {
+router.post('/', authMiddleware, adminMiddleware, async (req, res, next) => {
   try {
     const { match_number, phase, home_team, away_team, home_flag, away_flag, match_date, venue } = req.body;
 
@@ -49,13 +48,12 @@ router.post('/', authMiddleware, adminMiddleware, async (req, res) => {
     `;
     res.status(201).json({ match });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error al crear partido' });
+    next(err);
   }
 });
 
 // PATCH /api/matches/:id/result - admin sets result and triggers point calculation
-router.patch('/:id/result', authMiddleware, adminMiddleware, async (req, res) => {
+router.patch('/:id/result', authMiddleware, adminMiddleware, async (req, res, next) => {
   try {
     const { home_score, away_score } = req.body;
 
@@ -103,8 +101,7 @@ router.patch('/:id/result', authMiddleware, adminMiddleware, async (req, res) =>
 
     res.json({ match, message: `Resultado cargado. ${predictions.length} pronósticos actualizados.` });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error al cargar resultado' });
+    next(err);
   }
 });
 

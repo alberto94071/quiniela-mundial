@@ -50,6 +50,23 @@
 
 .matches-list { display: flex; flex-direction: column; gap: 16px; }
 
+.skeleton-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skeleton-line {
+  height: 14px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.04), rgba(0,200,83,0.2), rgba(255,255,255,0.04));
+  background-size: 200% 100%;
+  animation: shimmer 1.3s infinite linear;
+}
+
+.skeleton-line.short { width: 30%; }
+.skeleton-line.medium { width: 55%; }
+
 .match-card { transition: all 0.25s; }
 .match-card:hover { border-color: var(--border-bright); }
 .match-card.finished { border-color: rgba(107,122,141,0.2); }

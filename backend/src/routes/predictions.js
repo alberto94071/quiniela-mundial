@@ -5,7 +5,7 @@ import { authMiddleware } from '../middleware/auth.js';
 const router = express.Router();
 
 // GET /api/predictions/my - get logged-in user's predictions
-router.get('/my', authMiddleware, async (req, res) => {
+router.get('/my', authMiddleware, async (req, res, next) => {
   try {
     const predictions = await sql`
       SELECT p.*, m.home_team, m.away_team, m.home_flag, m.away_flag,
@@ -17,13 +17,12 @@ router.get('/my', authMiddleware, async (req, res) => {
     `;
     res.json({ predictions });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error al obtener pronósticos' });
+    next(err);
   }
 });
 
 // POST /api/predictions - create or update a prediction
-router.post('/', authMiddleware, async (req, res) => {
+router.post('/', authMiddleware, async (req, res, next) => {
   try {
     if (!req.user.is_active) {
       return res.status(403).json({ error: 'Tu cuenta no está activa. Realiza el pago de Q50 para participar.' });
@@ -33,6 +32,10 @@ router.post('/', authMiddleware, async (req, res) => {
 
     if (!match_id || home_score === undefined || away_score === undefined) {
       return res.status(400).json({ error: 'match_id, home_score y away_score son requeridos' });
+    }
+
+    if (!Number.isInteger(home_score) || !Number.isInteger(away_score)) {
+      return res.status(400).json({ error: 'Los marcadores deben ser enteros' });
     }
 
     if (home_score < 0 || away_score < 0 || home_score > 30 || away_score > 30) {
@@ -66,13 +69,12 @@ router.post('/', authMiddleware, async (req, res) => {
 
     res.json({ prediction, message: 'Pronóstico guardado exitosamente' });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error al guardar pronóstico' });
+    next(err);
   }
 });
 
 // GET /api/predictions/match/:matchId - after match, see all user predictions (public)
-router.get('/match/:matchId', async (req, res) => {
+router.get('/match/:matchId', async (req, res, next) => {
   try {
     const [match] = await sql`SELECT status FROM matches WHERE id = ${req.params.matchId}`;
     if (!match) return res.status(404).json({ error: 'Partido no encontrado' });
@@ -90,7 +92,7 @@ router.get('/match/:matchId', async (req, res) => {
     `;
     res.json({ predictions });
   } catch (err) {
-    res.status(500).json({ error: 'Error al obtener pronósticos' });
+    next(err);
   }
 });
 

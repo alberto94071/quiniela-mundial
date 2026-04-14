@@ -185,6 +185,43 @@ input, select, textarea {
   font-size: 0.9rem;
 }
 
+.toast-root {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 10000;
+}
+
+.toast {
+  min-width: 260px;
+  max-width: 420px;
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--green);
+  border-radius: 10px;
+  color: var(--text);
+  padding: 12px 12px 12px 14px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  box-shadow: var(--shadow-green);
+}
+
+.toast button {
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 18px;
+  line-height: 1;
+}
+
+.toast-success { border-left-color: var(--green); }
+.toast-error { border-left-color: var(--red); }
+.toast-info { border-left-color: var(--gold); }
+
 /* Responsive */
 @media (max-width: 768px) {
   .container { padding: 0 16px; }
