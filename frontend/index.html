@@ -20,5 +20,27 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Twemoji: arregla emojis de banderas en Windows/Chrome -->
+    <script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function applyTwemoji() {
+          twemoji.parse(document.body, {
+            folder: 'svg',
+            ext: '.svg',
+            base: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/'
+          });
+        }
+        applyTwemoji();
+        var observer = new MutationObserver(function () {
+          applyTwemoji();
+        });
+        observer.observe(document.getElementById('root'), {
+          childList: true,
+          subtree: true
+        });
+      });
+    </script>
   </body>
 </html>
