@@ -43,7 +43,11 @@ router.post('/', authMiddleware, adminMiddleware, async (req, res, next) => {
 
     const [match] = await sql`
       INSERT INTO matches (match_number, phase, home_team, away_team, home_flag, away_flag, match_date, venue)
-      VALUES (${match_number}, ${phase}, ${home_team}, ${away_team}, ${home_flag || ''}, ${away_flag || ''}, ${match_date}, ${venue || ''})
+      const matchDateGT = match_date.includes('+') || match_date.includes('Z') || match_date.includes('-06:') || match_date.includes('-05:')
+        ? match_date
+        : match_date + '-06:00';
+
+      VALUES (${match_number}, ${phase}, ${home_team}, ${away_team}, ${home_flag || ''}, ${away_flag || ''}, ${matchDateGT}, ${venue || ''})
       RETURNING *
     `;
     res.status(201).json({ match });
