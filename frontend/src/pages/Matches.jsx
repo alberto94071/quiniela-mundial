@@ -4,6 +4,37 @@ import { useAuth } from '../lib/AuthContext';
 import { useToast } from '../lib/ToastContext';
 import './Matches.css';
 
+// Convierte emoji de bandera a imagen SVG de Twemoji
+// Funciona en Windows/Chrome donde los emojis de banderas no se muestran
+function Flag({ emoji }) {
+  if (!emoji) return null;
+
+  try {
+    var codePoints = [];
+    var i = 0;
+    while (i < emoji.length) {
+      var code = emoji.codePointAt(i);
+      codePoints.push(code.toString(16));
+      i += code > 0xFFFF ? 2 : 1;
+    }
+    var filename = codePoints.join('-');
+    var src = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/' + filename + '.svg';
+    return (
+      <img
+        src={src}
+        alt={emoji}
+        style={{ width: '2rem', height: '2rem', objectFit: 'contain', display: 'inline-block' }}
+        onError={function(e) {
+          e.target.style.display = 'none';
+          e.target.parentNode.insertAdjacentText('afterbegin', emoji);
+        }}
+      />
+    );
+  } catch (err) {
+    return <span>{emoji}</span>;
+  }
+}
+
 function formatDate(dateStr) {
   const d = new Date(dateStr);
   return d.toLocaleString('es-GT', {
@@ -70,7 +101,7 @@ export default function Matches() {
         home_score: draft.home,
         away_score: draft.away,
       });
-      showToast('Pronostico guardado correctamente', 'success');
+      showToast('Pronóstico guardado correctamente', 'success');
       setMessages((m) => ({ ...m, [matchId]: { type: 'success', text: '✓ Pronóstico guardado' } }));
       setPredictions((p) => ({ ...p, [matchId]: { home_score: draft.home, away_score: draft.away } }));
     } catch (err) {
@@ -144,7 +175,9 @@ export default function Matches() {
 
               <div className="match-teams">
                 <div className="team home">
-                  <span className="team-flag">{match.home_flag}</span>
+                  <span className="team-flag">
+                    <Flag emoji={match.home_flag} />
+                  </span>
                   <span className="team-name">{match.home_team}</span>
                 </div>
 
@@ -165,7 +198,9 @@ export default function Matches() {
 
                 <div className="team away">
                   <span className="team-name">{match.away_team}</span>
-                  <span className="team-flag">{match.away_flag}</span>
+                  <span className="team-flag">
+                    <Flag emoji={match.away_flag} />
+                  </span>
                 </div>
               </div>
 
