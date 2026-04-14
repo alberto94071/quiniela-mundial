@@ -13,6 +13,7 @@ import MyPredictions from './pages/MyPredictions';
 import Admin from './pages/Admin';
 import NotFound from './pages/NotFound';
 import './styles/global.css';
+import Referrals from './pages/Referrals';
 
 export default function App() {
   useEffect(() => {
@@ -33,6 +34,7 @@ export default function App() {
             <Route path="/tabla" element={<Leaderboard />} />
             <Route path="/mis-pronosticos" element={<MyPredictions />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/referidos" element={<Referrals />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
